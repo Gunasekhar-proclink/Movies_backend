@@ -157,11 +157,14 @@ app.put("/movies/:id", function (request, response) {
   const { id } = request.params;
   let data = request.body;
   console.log(data);
-  let movie = movies.find((obj) => obj.id == id);
-  movie = { ...movie, ...data };
+  let index = movies.findIndex((obj) => obj.id == id);
+  movies[index] = { ...movies[index], ...data };
+  // let movie = movies.find((obj) => obj.id == id);
+  // movie = { ...movie, ...data };
   //data = { ...movie, };
   // movie = data;
   console.log(movie);
   response.send(movies);
 });
+
 app.listen(PORT, () => console.log(`The server started in: ${PORT} ✨✨`));
