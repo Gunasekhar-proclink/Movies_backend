@@ -163,7 +163,6 @@ app.put("/movies/:id", function (request, response) {
   // movie = { ...movie, ...data };
   //data = { ...movie, };
   // movie = data;
-  console.log(movie);
   response.send(movies);
 });
 
