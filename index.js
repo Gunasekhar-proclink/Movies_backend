@@ -1,8 +1,10 @@
 const express = require("express");
 const { v4 } = require("uuid");
 const app = express();
-
-const PORT = 4000;
+var cors = require("cors");
+app.use(cors());
+app.use(express.json()); // will aply the middle ware for all the api
+const PORT = process.env.PORT || 4000;
 const movies = [
   {
     id: "99",
@@ -144,21 +146,22 @@ app.delete("/movies/:id", function (request, response) {
 });
 // to inform the fn that we are expexcting body as the json data only | middle ware
 // this will convert the body into json
-app.post("/movies", express.json(), function (request, response) {
+app.post("/movies", function (request, response) {
   const data = request.body;
   console.log(data);
-  movies.push({ id: v4(), data });
+  movies.push({ id: v4(), ...data });
   console.log(v4());
   response.send(movies);
 });
-app.put("/movies/:id", express.json(), function (request, response) {
+app.put("/movies/:id", function (request, response) {
   const { id } = request.params;
   let data = request.body;
   console.log(data);
   let movie = movies.find((obj) => obj.id == id);
-  let movie1 = { ...movie, ...data };
+  movie = { ...movie, ...data };
   //data = { ...movie, };
   // movie = data;
-  response.send(movie1);
+  console.log(movie);
+  response.send(movies);
 });
 app.listen(PORT, () => console.log(`The server started in: ${PORT} ✨✨`));
