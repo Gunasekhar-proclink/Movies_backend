@@ -1,6 +1,17 @@
-import express from "express";
-import { v4 } from "uuid";
-const movies = [
+import express, { response } from "express";
+import { v4 as uuidv4 } from "uuid";
+import { Movies } from "../entities/movies.entity.js";
+import {
+  getAllMoviesCtr,
+  getMoviebyIdCtr,
+  deleteMovieCtr,
+  createMovieCtr,
+  updateMovieCtr,
+} from "../controllers/movies.controller.js";
+
+const router = express.Router();
+
+let movies = [
   {
     id: "99",
     name: "Vikram",
@@ -107,55 +118,19 @@ const movies = [
       "When Earth becomes uninhabitable in the future, a farmer and ex-NASA\\n pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team\\n of researchers, to find a new planet for humans.",
     rating: 8.8,
     trailer: "https://youtu.be/NgsQ8mVkN8w",
+
     id: "109",
   },
 ];
-const router = express.Router();
-app.get("/movies", function (request, response) {
-  response.send(movies);
-});
-app.get("/movies/:id", function (request, response) {
-  const { id } = request.params;
-  console.log(id);
-  let data = {};
-  data = movies.find((movie) => movie.id == id);
-  if (data) {
-    response.send(data);
-  } else {
-    response.status(404).send({ msg: "movie is not present🥲" });
-  }
-});
-app.delete("/movies/:id", function (request, response) {
-  const { id } = request.params;
-  data = movies.find((movie) => movie.id == id);
-  if (data) {
-    let idx = movies.indexOf(data);
-    movies.splice(idx, 1);
-    response.send({ msg: "movie deleted successfully", data: data });
-  } else {
-    response.status(404).send({ msg: "movie is not present🥲" });
-  }
-});
-// to inform the fn that we are expexcting body as the json data only | middle ware
-// this will convert the body into json
-app.post("/movies", function (request, response) {
-  const data = request.body;
-  console.log(data);
-  movies.push({ id: v4(), ...data });
-  console.log(v4());
-  response.send(movies);
-});
-app.put("/movies/:id", function (request, response) {
-  const { id } = request.params;
-  let data = request.body;
-  console.log(data);
-  let index = movies.findIndex((obj) => obj.id == id);
-  movies[index] = { ...movies[index], ...data };
-  // let movie = movies.find((obj) => obj.id == id);
-  // movie = { ...movie, ...data };
-  //data = { ...movie, };
-  // movie = data;
-  response.send(movies);
-});
+
+router.get("/", getAllMoviesCtr);
+
+router.get("/:id", getMoviebyIdCtr);
+
+router.delete("/:id", deleteMovieCtr);
+
+router.post("/", createMovieCtr);
+
+router.put("/:id", updateMovieCtr);
 
 export default router;
