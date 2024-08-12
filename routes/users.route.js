@@ -7,15 +7,7 @@ import {
 
 const router = express.Router();
 
-// router.get("/", getAllMoviesCtr);
-
-// router.get("/", getMoviebyIdCtr);
-
-// router.delete("/:id", deleteMovieCtr);
-
 router.post("/signup", createUserCtr);
 router.post("/login", logicUserCtr);
-
-// router.put("/:id", updateMovieCtr);
 
 export default router;
