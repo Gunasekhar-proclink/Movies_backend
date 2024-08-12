@@ -9,6 +9,7 @@ import {
   createUser,
   getUserByuserName,
 } from "../services/user.services.js";
+import { response } from "express";
 
 // async function getAllMoviesCtr(request, response) {
 //   // response.send(movies);
@@ -88,6 +89,27 @@ async function createUserCtr(req, res) {
   }
 }
 
+async function logicUserCtr(req, res) {
+  const data = req.body;
+  const userFromDB = await getUserByuserName(data.userName);
+  if (!userFromDB.data) {
+    res.status(404).send({ msg: "Invalid Credentials" });
+    return;
+  } else {
+    const storedDBPassword = userFromDB.data.password;
+    const providedPassword = data.password;
+    const isPasswordCheck = await bcrypt.compare(
+      providedPassword,
+      storedDBPassword
+    );
+    if (isPasswordCheck) {
+      res.status(200).send({ msg: "Login Successful" });
+    } else {
+      res.status(400).send({ msg: "Invalid Credentials" });
+    }
+  }
+}
+
 // async function updateMovieCtr(request, response) {
 //   const { id } = request.params;
 //   const updateMovie = request.body;
@@ -109,6 +131,7 @@ export {
   //   getAllMoviesCtr,
   //   deleteMovieCtr,
   createUserCtr,
+  logicUserCtr,
   //   updateMovieCtr,
   //   getMoviebyIdCtr,
 };
