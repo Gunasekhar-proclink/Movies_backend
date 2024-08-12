@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import { createUser, getUserByuserName } from "../services/user.services.js";
 import { response } from "express";
@@ -52,7 +53,12 @@ async function logicUserCtr(req, res) {
       storedDBPassword
     );
     if (isPasswordCheck) {
-      res.status(200).send({ msg: "Login Successful" });
+      var token = jwt.sign(
+        { foo: userFromDB.data.userName },
+        process.env.SECRET_KEY
+      );
+
+      res.status(200).send({ msg: "Login Successful", token });
     } else {
       res.status(400).send({ msg: "Invalid Credentials" });
     }

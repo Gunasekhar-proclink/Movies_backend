@@ -1,5 +1,6 @@
 import express, { response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import { auth } from "../middleware/auth.middleware.js";
 import {
   createUserCtr,
   logicUserCtr,

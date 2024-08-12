@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { Movies } from "../entities/movies.entity.js";
+import { auth } from "../middleware/auth.middleware.js";
 import {
   getAllMoviesCtr,
   getMoviebyIdCtr,
@@ -123,7 +124,7 @@ let movies = [
   },
 ];
 
-router.get("/", getAllMoviesCtr);
+router.get("/", auth, getAllMoviesCtr);
 
 router.get("/:id", getMoviebyIdCtr);
 
