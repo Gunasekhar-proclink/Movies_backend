@@ -7,6 +7,7 @@ import {
   // UpdateMovieById,
   // deleteMovieById,
   createUser,
+  getUserByuserName,
 } from "../services/user.services.js";
 
 // async function getAllMoviesCtr(request, response) {
@@ -52,11 +53,35 @@ import {
 //   }
 // }
 
+const generatePassword = async (password) => {
+  const NO_OF_ROUNDS = 10;
+  const salt = await bcrypt.genSalt(NO_OF_ROUNDS);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  console.log(typeof hashedPassword);
+  return hashedPassword;
+};
+
 async function createUserCtr(req, res) {
   const data = req.body;
+  const password = data.password;
+  if (data.password.length < 8) {
+    res.status(400).send({ msg: "password is too short" });
+    return;
+  }
+  const userFromDB = await getUserByuserName(data.userName);
+  if (userFromDB.data) {
+    res.status(400).send({ msg: "user already exists" });
+    return;
+  }
+  const hashedPassword = await generatePassword(password);
+  const hasheddata = {
+    userName: data.userName,
+    password: hashedPassword,
+  };
   try {
-    await createUser(data);
-    res.status(201).send(data);
+    await createUser(hasheddata);
+    res.status(201).send(hasheddata);
+    console.log(hasheddata);
   } catch (err) {
     console.log(err);
     res.send({ msg: "unable to create" });
