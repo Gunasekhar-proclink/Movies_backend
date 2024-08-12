@@ -59,9 +59,10 @@ async function createMovieCtr(req, res) {
   };
   try {
     await createMovie(addMovie);
-    response.status(201).send(addMovie);
+    res.status(201).send(addMovie);
   } catch (err) {
-    response.send(err);
+    console.log(err);
+    res.send({ msg: "unable to create" });
   }
 }
 

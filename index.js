@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 const app = express();
 import moviesRouter from "./routes/movies.route.js";
+import usersRouter from "./routes/users.route.js";
 
 const PORT = process.env.PORT || 4000;
 app.use(cors());
@@ -14,5 +15,6 @@ app.get("/", function (request, response) {
 });
 
 app.use("/movies", moviesRouter);
+app.use("/user", usersRouter);
 
 app.listen(PORT, () => console.log(`The server started in: ${PORT} ✨✨`));
