@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-import { createUser, getUserByuserName } from "../services/user.services.js";
+import { v4 } from "uuid";
+import { createUser, getUserByuserName  , createSession} from "../services/user.services.js";
 import { response } from "express";
 
 const generatePassword = async (password) => {
@@ -15,6 +15,7 @@ const generatePassword = async (password) => {
 async function createUserCtr(req, res) {
   const data = req.body;
   const password = data.password;
+  const roleId = 0 ; 
   if (data.password.length < 8) {
     res.status(400).send({ msg: "password is too short" });
     return;
@@ -28,6 +29,7 @@ async function createUserCtr(req, res) {
   const hasheddata = {
     userName: data.userName,
     password: hashedPassword,
+    roleId : roleId , 
   };
   try {
     await createUser(hasheddata);
@@ -41,6 +43,7 @@ async function createUserCtr(req, res) {
 
 async function logicUserCtr(req, res) {
   const data = req.body;
+  const userName = data.userName ; 
   const userFromDB = await getUserByuserName(data.userName);
   if (!userFromDB.data) {
     res.status(404).send({ msg: "Invalid Credentials" });
@@ -57,6 +60,8 @@ async function logicUserCtr(req, res) {
         { foo: userFromDB.data.userName },
         process.env.SECRET_KEY
       );
+      const sessionData = {userName , token}
+      await createSession(sessionData);
 
       res.status(200).send({ msg: "Login Successful", token });
     } else {
@@ -65,4 +70,4 @@ async function logicUserCtr(req, res) {
   }
 }
 
-export { createUserCtr, logicUserCtr };
+export { createUserCtr, logicUserCtr ,  };

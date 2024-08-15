@@ -2,24 +2,20 @@ import { Entity } from "electrodb"; // ORM(Object relation mapping) // Adapter o
 
 import { client } from "../util/dbconnection.js";
 
-const Users = new Entity(
+const Session = new Entity(
   {
     model: {
-      entity: "Users",
+      entity: "session",
       version: "2",
-      service: "UsersService",
+      service: "sessionService",
     },
     attributes: {
       userName: {
         type: "string",
         required: true,
       },
-      password: {
+      token: {
         type: "string",
-        required: true,
-      },
-      roleId: {
-        type: "number",
         required: true,
       },
     },
@@ -28,7 +24,7 @@ const Users = new Entity(
         pk: {
           // highlight-next-line
           field: "pk",
-          facets: ["userName"],
+          facets: ["token"],
         },
         sk: {
           // highlight-next-line
@@ -39,7 +35,7 @@ const Users = new Entity(
     },
     // add your DocumentClient and TableName as a second parameter
   },
-  { client, table: "Users" }
+  { client, table: "session" }
 );
 
-export { Users };
+export { Session };

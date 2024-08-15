@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { Movies } from "../entities/movies.entity.js";
+import { authIsAdmin } from "../middleware/isadmin.middleware.js";
 import { auth } from "../middleware/auth.middleware.js";
 import {
   getAllMoviesCtr,
@@ -124,11 +125,11 @@ let movies = [
   },
 ];
 
-router.get("/", auth, getAllMoviesCtr);
+router.get("/", getAllMoviesCtr);
 
 router.get("/:id", getMoviebyIdCtr);
 
-router.delete("/:id", deleteMovieCtr);
+router.delete("/:id",auth ,  authIsAdmin , deleteMovieCtr);
 
 router.post("/", createMovieCtr);
 
